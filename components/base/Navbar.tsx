@@ -3,9 +3,13 @@ import BrandLogo from "./BrandLogo";
 import {Search} from "lucide-react"
 import NavPopupMenu from "./NavPopupMenu";
 import MobileNav from "./MobileNav";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import {cookies} from "next/headers"
 
-export default function Navbar() {
-
+export default async function Navbar() {
+  const supabase = createServerComponentClient({cookies});
+  const {data,error} = await supabase.auth.getSession();
+  console.log("The session is", data);
 
   return (
     <div className="flex items-center justify-between px-10 border-b-[1px]">
@@ -26,7 +30,7 @@ export default function Navbar() {
       <div className = "hidden md:flex gap-2">
         {/* Third Component */}
         <span>Add your home</span>
-        <NavPopupMenu />
+        <NavPopupMenu session={data?.session?.user} />
       </div>
     </div>
   );
